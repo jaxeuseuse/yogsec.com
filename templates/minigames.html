@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Games</title>
+		<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+        	<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+        	<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+        	<link rel="manifest" href="/favicon/site.webmanifest">
+		<!-- style.css linking here -->
+		<link rel="stylesheet" href="/css/style.css">
+		<!-- font family linking here -->
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+		<!-- font-awesome.min.css linking here -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	</head>
+	<body>
+		<!-- header section strt -->
+		<section class="sub-header">
+			<!-- nav strt -->
+			<nav>
+				<a href="/"><img src="/images/logo1.png" alt="YogSec"></a>
+				<div class="nav-links" id="navLinks">
+					<i class="fa fa-times" onclick="hideMenu()"></i>
+					<ul>
+						<li>
+							<a href="/">HOME</a>
+						</li>
+						<li>
+							<a href="/About">ABOUT</a>
+						</li>
+						<li>
+							<a href="/Games">GAMES</a>
+						</li>
+						<li>
+							<a href="/Admin">ADMIN</a>
+						</li>
+						<li>
+							<a href="/Contact">CONTACT</a>
+						</li>
+					</ul>
+				</div>
+				<i class="fa fa-bars" onclick="showMenu()"></i>
+			</nav>
+			<!-- nav end -->
+			<h1>Games</h1>
+		</section>
+		<!-- header section end -->
+		<!-- about us content start -->
+		<section class="about-us">
+			<div class="row">
+                <iframe src="https://scratch.mit.edu/projects/1093045043/embed" allowtransparency="true" width="485" height="402" frameborder="0" scrolling="no" allowfullscreen></iframe>
+                <iframe src="https://scratch.mit.edu/projects/1079839538/embed" allowtransparency="true" width="485" height="402" frameborder="0" scrolling="no" allowfullscreen></iframe>
+            </div>
+		</section>
+		
+		<!-- footer strt -->
+		<section class="footer">
+			<a href="/About" style="text-decoration:none;"><h4>About Me</h4></a>
+			<p>None of your beeswax mf</p>
+			<p>Base website design by <strong>Sayeeda Saim</strong></p>
+		</section>
+		<!-- footer end -->
+		<!-- Javascript for toggle menu -->
+		<script>
+			var navLinks = document.getElementById("navLinks");
+			function showMenu(){
+				navLinks.style.right = "0";
+			}
+			function hideMenu(){
+				navLinks.style.right = "-200px";
+			}
+		</script>
+	</body>
+</html>

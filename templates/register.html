@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block main %}
+<form action="/clargclick/register" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="name" placeholder="Name"
+            type="text">
+    </div>
+    <div class="mb-3">
+        <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password">
+    </div>
+    <div class="mb-3">
+        <input class="form-control mx-auto w-auto" name="confirmation" placeholder="confirmation" type="password">
+    </div>
+    <div class="mb-3">
+        <p style="color: red;">Profile Picture *optional*</p>
+        <label for="file-upload" class="custom-file-upload">
+            Profile Upload
+        </label>
+    <input id="file-upload" type="file" name="profile_picture" accept="image/png, image/jpeg">
+    </div>
+    <button class="btn btn-primary" type="submit">Register</button>
+</form>
+{% endblock %}

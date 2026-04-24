@@ -1,0 +1,370 @@
+{% extends 'layout.html' %}
+
+{% block title %}Dashboard - ClargClick{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 bg-light p-4">
+                <h4 class="text-center mb-4">Dashboard</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-3">
+                        <a class="nav-link active" href="#" id="dashboard-link" onclick="showSection('dashboard-section')">Dashboard</a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a class="nav-link" href="#" id="clargs-link" onclick="showSection('clargs-section')">Clargs</a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a class="nav-link" href="#" id="settings-link" onclick="showSection('settings-section')">Settings</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-9 p-4">
+                <div id="dashboard-section">
+                    <h2>Welcome, {{ username }}!</h2>
+                    <p class="lead">Your dashboard overview and quick insights.</p>
+
+                    <div class="row">
+                        <div class="col-sm-6 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Leaderboard Number</h5>
+                                    <p class="card-text display-4">#{{ leader_board_number }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Clargs Owned</h5>
+                                    <p class="card-text display-4">{{ clargs_count }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Click Total</h5>
+                                    <p class="card-text display-4">{{'{:,}'.format(click_total) }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Clarg Unlocker</h5>
+                                    {% for clarg_type in available_clargs %}
+                                        <div class="mb-2">
+                                            {% if not clargs_owned[clarg_type].unlocked %}
+                                                {% if clarg_type != "secret_clarg" %}
+                                                    <form method="POST" action="{{ url_for('clarg_unlock') }}">
+                                                        <input type="hidden" name="clarg_type" value="{{ clarg_type }}">
+                                                        <button type="submit" class="btn btn-outline-primary w-100">Unlock {{ clarg_type.replace('_', ' ').title() }}</button>
+                                                    </form>
+                                                {% endif %}
+                                            {% else %}
+                                                <button class="btn btn-success w-100" disabled>{{ clarg_type.replace('_', ' ').title() }} (Unlocked)</button>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="clargs-section" style="display: none;">
+                    <h2>Select Your Clarg!</h2>
+                    <div class="clarg-cards-container">
+                        {% for clarg_type in available_clargs %}
+                            <form action="/clargclick/select_clarg" method="post">
+                                <div class="clarg-card {% if clargs_owned[clarg_type].selected %}selected{% endif %} {% if not clargs_owned[clarg_type].unlocked %}locked{% endif %}">
+                                    <input type="radio" name="selected_clarg" value="{{ clarg_type }}" id="clarg-{{ clarg_type }}" {% if clargs_owned[clarg_type].selected %} checked {% endif %} style="display: none;">
+                                    <label for="clarg-{{ clarg_type }}" class="clarg-card-label {% if clargs_owned[clarg_type].unlocked %}unlocked-label{% else %}locked-label{% endif %}" {% if clargs_owned[clarg_type].unlocked %}onclick="this.closest('form').submit()" {% endif %}>
+                                        <div class="clarg-card-image">
+                                            {% if clargs_owned[clarg_type].unlocked %}
+                                                <img src="{{ url_for('static', filename='clargs/' + clarg_type + '.png') }}" alt="{{ clarg_type }}">
+                                            {% else %}
+                                                <img src="{{ url_for('static', filename='clargs/locked.png') }}" alt="Locked Clarg">
+                                            {% endif %}
+                                        </div>
+                                        <div class="clarg-card-info">
+                                            {% if clargs_owned[clarg_type].unlocked %}
+                                                <h3 class="clarg-name">{{ clarg_type.replace('_', ' ').title() }}</h3>
+                                            {% else %}
+                                                <h3 class="clarg-name">???</h3>
+                                            {% endif %}
+
+                                            <p class="clarg-stats">
+                                                {% if clarg_type == "clarg" %}
+                                                    1x Clicks
+                                                {% elif clarg_type == "dr_clarg" %}
+                                                    2% chance (per click) for 2x boost
+                                                {% elif clarg_type == "business_clarg" %}
+                                                    5% chance (per click) for 3x boost
+                                                {% elif clarg_type == "vacation_clarg" %}
+                                                    3% chance (per click) for 8x
+                                                {% elif clarg_type == "jamaican_clarg" %}
+                                                    5% chance (per click) for 9x
+                                                {% elif clarg_type == "ben_clarg" %}
+                                                    10% chance (per click) for 0x
+                                                {% endif %}
+                                            </p>
+
+                                            {% if not clargs_owned[clarg_type].unlocked %}
+                                                <p class="clarg-unlock-req">
+                                                    {% if clarg_type == "dr_clarg" %}
+                                                        Have 5,000 clicks total to unlock
+                                                    {% elif clarg_type == "business_clarg" %}
+                                                        Have 10,000 clicks total to unlock
+                                                    {% elif clarg_type == "vacation_clarg" %}
+                                                        Have 30,000 clicks total to unlock
+                                                    {% elif clarg_type == "jamaican_clarg" %}
+                                                        Have 55,000 click total to unlock
+                                                    {% elif clarg_type == "ben_clarg" %}
+                                                        Have 100,000 click total to unlock
+                                                    {% endif %}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+                                        <input type="hidden" name="selected_clarg" value="{{ clarg_type }}">
+                                    </label>
+                                </div>
+                            </form>
+                        {% endfor %}
+                    </div>
+                </div>
+                <style>
+                /* CLARG CARDS STYLING */
+                    .clarg-cards-container {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 2vw;
+                    /* Responsive gap using viewport width */
+                        justify-content: center;
+                    }
+
+                    .clarg-card {
+                        border: 0.2em solid #ccc;
+                    /* Responsive border using em */
+                        border-radius: 1em;
+                    /* Responsive border-radius */
+                        padding: 1.5vh;
+                    /* Responsive padding using viewport height */
+                        width: 15vw;
+                    /* Responsive width - adjust as needed */
+                        min-width: 12em;
+                    /* Minimum width to prevent extreme shrinking */
+                        cursor: pointer;
+                        transition: transform 0.2s, box-shadow 0.2s;
+                    }
+
+                    .clarg-card:hover {
+                        transform: translateY(-0.5vh);
+                    /* Responsive vertical translation */
+                        box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+                    /* Responsive box shadow */
+                    }
+
+                    .clarg-card.selected {
+                        border-color: #007bff;
+                        box-shadow: 0 0 1vh rgba(0, 123, 255, 0.5);
+                    }
+
+                    .clarg-card.locked {
+                        opacity: 0.8;
+                    /* Slightly reduce opacity for locked cards */
+                    }
+
+                    .clarg-card-image {
+                        width: 100%;
+                        height: 15vh;
+                    /* Responsive height using viewport height */
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+
+                    .clarg-card-image img {
+                        max-width: 100%;
+                        max-height: 100%;
+                        object-fit: contain;
+                    }
+
+                    .clarg-card-info {
+                        margin-top: 1vh;
+                    /* Responsive margin */
+                    }
+
+                    .clarg-name {
+                        font-weight: bold;
+                        font-size: 1.2em;
+                    /* Responsive font size */
+                    }
+
+                    .clarg-stats {
+                        margin-top: 0.5vh;
+                    /* Responsive margin */
+                        font-size: 0.8em;
+                    /* Responsive font size */
+                    }
+
+                    .clarg-unlock-req {
+                        margin-top: 0.5vh;
+                    /* Responsive margin */
+                        color: red;
+                        font-size: 0.7em;
+                    /* Responsive font size */
+                    }
+
+                /* Styles for locked Clarg cards */
+                    .clarg-card.locked .clarg-name {
+                        color: #666;
+                    /* Lighter gray color for the ??? name */
+                    }
+
+                    .clarg-select-button {
+                        margin-top: 1vh;
+                    /* Responsive margin */
+                        padding: 0.8em 1.5em;
+                    /* Responsive padding */
+                        background-color: #007bff;
+                    /* Or your preferred color */
+                        color: white;
+                        border: none;
+                        border-radius: 0.5em;
+                    /* Responsive border radius */
+                        cursor: pointer;
+                        font-size: 1em;
+                    /* Responsive font size */
+                    }
+
+                    .clarg-select-button:disabled {
+                        background-color: #ccc;
+                        cursor: default;
+                    }
+
+                    .attempt_clarg {
+                        font-size: 0.5em;
+                    }
+
+                    .attempt_clarg_unlocked {
+                        font-size: 0.5em;
+                        background-color: green;
+                        cursor: default !important;
+                    }
+
+                    .clarg-cards-container {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 1.5rem;
+                        justify-content: center;
+                    }
+
+                    .clarg-card {
+                        border: 2px solid #ccc;
+                        border-radius: 10px;
+                        width: 200px;
+                        padding: 1rem;
+                        text-align: center;
+                        transition: transform 0.2s, box-shadow 0.2s;
+                    }
+
+                    .clarg-card:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                    }
+
+                    .clarg-card.locked {
+                        opacity: 0.6;
+                        cursor: not-allowed;
+                    }
+
+                    .clarg-card img {
+                        max-width: 100%;
+                        height: auto;
+                    }
+
+                    .clarg-card-info {
+                        margin-top: 1rem;
+                    }
+
+                    .clarg-name {
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                    }
+
+                    .clarg-stats {
+                        font-size: 0.9rem;
+                        color: #555;
+                    }
+                </style>
+                <div id="settings-section" style="display: none;">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    <h2>Settings</h2>
+                    <br>
+                    <br>
+                    <h4>New Profile Picture </h4>
+                    <form action="/clargclick/new_pfp" method="POST" enctype="multipart/form-data">
+                        <img src="{{ url_for('profile_picture', user_id=session['user_id']) }}" alt="Account" class="img-fluid rounded-circle" style="width: 10vw; height: 10vh;">
+                        <label for="file-upload" class="custom-file-upload">
+                            Select New PFP
+                        </label>
+                        <input id="file-upload" type="file" name="new_pfp" accept="image/png, image/jpeg" onchange="this.form.submit()">
+                    </form>
+                    <br>
+                    <br>
+                    <h4>Change Password</h4>
+
+                    <form action="/clargclick/new_password" method="POST">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                            <label for="new_password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="new_password" name="new_password">
+                            <label for="confirm_password" class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password">
+                        </div>
+
+                        <button type="submit" style="font-size: .5em" class="btn btn-primary">Save Changes</button>
+                    </form>
+
+                    <br>
+                    <br>
+                    <h4>Change Username</h4>
+                    <form action="/clargclick/new_username" method="POST">
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">New Username</label>
+                            <input type="text" class="form-control" id="username" name="username">
+                        </div>
+
+                        <button type="submit" style="font-size: .5em" class="btn btn-primary">Save Changes</button>
+                    </form>
+
+
+                    <br>
+                    <br>
+                    <h4>Delete Account</h4>
+                    <form action="/clargclick/delete_account" method="POST">
+                        <button style="background-color: red; font-size: .5em;" type="submit" class="btn btn-primary">Delete
+                            Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/scriptDash.js"></script>
+{% endblock %}

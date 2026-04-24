@@ -1,0 +1,44 @@
+{% extends 'layout2.html' %}
+
+{% block main %}
+    <section class="contact-us">
+        <div class="row">
+            <div class="contact-col">
+                <i class="fa fa-envelope-o"></i>
+                <span>
+                    <h5>dbag@yogsec.com</h5>
+                    <p>Contact us today</p>
+                </span>
+            </div>
+            <div class="contact-col">
+                <form id="contactForm" method="post">
+                    <input type="text" name="name" placeholder="Enter Your Name" required>
+                    <input type="email" name="email" placeholder="Enter Email Address" required>
+                    <textarea rows="5" name="message" placeholder="Message" required></textarea>
+                    <button type="submit" class="hero-btn red-btn">Send Message</button>
+                </form>
+                <div id="responseMessage"></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+    $(document).ready(function() {
+        $("#contactForm").bind("submit", function() {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "https://script.google.com/macros/s/AKfycbzJX1hCjkbq3SnkG77XQS6hPVkX2OLEGiw4KIhCsihmya23DSiIBeWghd_aj17cQa7s1Q/exec",  // Replace with your script URL
+                data: $(this).serializeArray(),
+                success: function (data) {  // If 200 OK
+                    $("#contactForm")[0].reset();  // Clear the form
+                    $("#responseMessage").text("Thank you for contacting us! El-Dbag III will personally get back to you shortly!");
+                },
+                error: function (xhr, text, error) {  // If 40x or 50x; errors
+                }
+            });
+            return false; // Prevent default form submission
+        });
+    });
+    </script>
+{% endblock %}

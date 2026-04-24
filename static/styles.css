@@ -1,0 +1,438 @@
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;  /* Change to min-height */
+    box-sizing: border-box;
+    background-size: cover;      /* Add these */
+    background-attachment: fixed; /* if using background-image */
+}
+
+html {
+	height: 100%;
+	box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: inherit;
+}
+
+h1,
+p {
+	text-align: center;
+	margin: 0;
+}
+
+img {
+	display: block;
+	margin: 0 auto;
+	max-width: 100%;
+	/* Responsive image within its container */
+	height: auto;
+	/* Maintain aspect ratio */
+}
+
+.game_container {
+	flex-grow: 1;
+	/* Allow game_container to grow to fit available space */
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	width: 100%;
+	max-height: 100vh;
+	/* Limit the height to 60% of the viewport height */
+	padding: 0;
+	box-sizing: border-box;
+	overflow: visible;
+	flex-wrap: nowrap;
+	/* Prevent items from wrapping */
+	height: auto;
+	/* Allow content to shrink naturally */
+}
+
+.left-panel,
+.right-panel {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: 1vh;
+	width: 20%;
+}
+
+.left-panel {
+	align-items: flex-start;
+	order: -1;
+}
+
+.right-panel {
+	align-items: flex-end;
+	order: 1;
+}
+
+.game_stuff {
+	width: 50%;
+	text-align: center;
+	order: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.game_stuff>* {
+	width: 100%;
+	margin-bottom: 1vh;
+}
+
+#title_game {
+	margin-bottom: 1vh;
+	font-size: 2em;
+}
+
+#instructions {
+	margin-top: 0.5vh;
+	font-size: 1.5em;
+}
+
+button {
+	padding: 0.5em;
+	border: 2px solid #888;
+	border-radius: 0.5em;
+	background-color: white;
+	font-size: 0.8em;
+	cursor: pointer;
+	width: 8vw;
+	text-align: center;
+	white-space: nowrap;
+	/* Prevent button text from wrapping */
+}
+
+button:hover {
+	background-color: grey;
+}
+
+#resetButton {
+	background-color: red;
+	color: white;
+}
+
+#resetButton:hover {
+	background-color: darkred;
+}
+
+#viewClick,
+#viewTime,
+#viewCPS {
+	background-color: white;
+	padding: 0.5em;
+	border: 2px solid #888;
+	border-radius: 0.5em;
+	box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
+	text-align: center;
+	background-color: lightgrey;
+	font-size: 0.8em;
+	width: 10vw;
+	margin-bottom: 1vh;
+}
+
+#viewClick span,
+#viewTime span,
+#viewCPS span {
+	font-weight: bold;
+}
+
+/* Popup Styles */
+.popup {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.popup-content {
+	background-color: white;
+	padding: 2em;
+	border-radius: 1em;
+	text-align: center;
+	box-shadow: 0 0 2em rgba(0, 0, 0, 0.2);
+}
+
+.popup-content p {
+	margin-bottom: 1em;
+	font-size: 1.2em;
+}
+
+.popup-content button {
+	padding: 0.8em 1.5em;
+	border: none;
+	border-radius: 0.5em;
+	background-color: red;
+	color: white;
+	font-size: 1em;
+	cursor: pointer;
+}
+
+.popup-content button:hover {
+	background-color: darkred;
+}
+
+#close-button {
+	margin-right: 7vw;
+}
+
+#leader-button {
+	margin-left: 7vw;
+}
+
+.leaderboard {
+	table-layout: fixed;
+	/* Prevent the table from expanding beyond its container */
+	width: 100%;
+	/* Ensure the table doesn't exceed its parent */
+	border-collapse: collapse;
+	font-size: 0.5em;
+	/* Reduce overall font size for compactness */
+}
+
+.leaderboard th,
+.leaderboard td {
+	border: .8px solid #ddd;
+	padding: .6px;
+	font-size: .9em;
+	/* Compact text */
+	word-wrap: break-word;
+	/* Break long text within cells */
+}
+
+.leaderboard th {
+	background-color: #f2f2f2;
+	text-align: left;
+}
+
+.leaderboard tr:nth-child(even) {
+	background-color: #f9f9f9;
+}
+
+.leaderboard tr:hover {
+	background-color: #ddd;
+}
+
+.leaderboard img {
+	width: 20px;
+	/* Further reduce image size */
+	height: 20px;
+}
+
+#leader-display {
+	margin-top: 0;
+	width: 100%;
+	/* Make it stretch across the container */
+	margin-bottom: 0;
+	overflow: hidden;
+	/* Prevent scrolling entirely */
+}
+
+.stats-buttons-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 10px;
+}
+
+.stats-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 5px;
+}
+
+.buttons-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 5px;
+}
+
+.game_container>.right-panel {
+	width: 20%;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}
+
+.game_container>.game_stuff {
+	width: 65%;
+	/* Adjust the width of the game area */
+	align-items: center;
+	margin-top: 0;
+}
+
+.game_container>.left-panel>#leader-display {
+	margin-top: 0;
+	margin-bottom: auto;
+}
+
+.game_stuff .buttons-container,
+.game_stuff .stats-container {
+	width: auto;
+	align-items: center;
+}
+
+.game_stuff #viewClick,
+.game_stuff #viewTime,
+.game_stuff #viewCPS {
+	width: auto;
+	margin-bottom: 0.5vh;
+	white-space: nowrap;
+}
+
+.game_stuff button {
+	width: auto;
+	margin-bottom: 0.5vh;
+}
+
+.game_stuff #clarg {
+	max-width: 80%;
+	max-height: 30vh;
+	object-fit: contain;
+}
+
+.game_stuff>#title_game,
+.game_stuff>#instructions {
+	margin-top: 0;
+	margin-bottom: 0.5vh;
+}
+
+.game_stuff>#clarg {
+	margin-top: 0;
+	max-height: 40vh;
+}
+
+input[type="file"] {
+	display: none;
+}
+
+.custom-file-upload {
+	border: 1px solid #ccc;
+	display: inline-block;
+	padding: 6px 12px;
+	cursor: pointer;
+}
+
+@media (max-width: 768px) {
+	#leader-display {
+		max-height: 25vh;
+		/* Slightly larger on smaller screens */
+	}
+
+	.leaderboard {
+		font-size: 0.5em;
+		/* Even smaller font for tight spaces */
+	}
+
+	.leaderboard img {
+		width: 15px;
+		height: 15px;
+		/* Shrink images further */
+	}
+}
+
+.suggestion-box2 {
+	/* Remove position: flex-start, top, left, and transform */
+	width: 100%;
+	/* Take up the full width of the left-panel */
+	max-width: 100%;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	/* Softened shadow */
+	border-radius: 8px;
+	padding: 1rem;
+	margin-top: 1rem;
+	/* Add space from the element above */
+	box-sizing: border-box;
+	z-index: 1;
+	/* Normal stack order */
+	margin-top: 0;
+	flex: 2 1 200px;
+	/* Grow, shrink, and base width of 200px */
+	background: var(--card);
+	border: 1px solid #eee;
+	margin: 0;
+	margin-left: 0 !important;
+}
+
+.box2 {
+	background: var(--card);
+	padding: 1rem;
+	border-radius: 8px;
+	border: 1px solid #eee;
+	/* Added subtle border to act like a card */
+	margin-bottom: 1rem;
+	margin-left: 0;
+}
+
+/* Ensure the textarea doesn't break the layout */
+.suggestion-box2 textarea {
+	width: 100%;
+	padding: 0.5rem;
+	border: 1px solid #ddd;
+	border-radius: 6px;
+	resize: vertical;
+	font-family: inherit;
+}
+
+.stats-column {
+	display: flex;
+	flex-direction: column;
+	flex: 0 1 auto;
+	/* Don't grow, but shrink if needed */
+	gap: 1vh;
+}
+
+@media (max-width: 1024px) {
+	.game_container>.left-panel {
+		flex-direction: column;
+		/* Stack vertically on tablets/phones */
+		width: 25%;
+		align-items: center;
+	}
+
+	.suggestion-box2 {
+		width: 100%;
+		max-width: none;
+	}
+}
+
+/* Override existing indicator styles for better fit */
+#viewClick,
+#viewTime,
+#viewCPS {
+	width: auto;
+	min-width: 100px;
+	padding: 0.5em 1em;
+	font-size: clamp(0.7rem, 1vw, 0.9rem);
+	/* Fluid typography */
+}
+
+/* This replaces the two conflicting left-panel blocks */
+.game_container>.left-panel {
+	display: flex !important;
+	flex-direction: row !important;
+	/* Force side-by-side */
+	flex-wrap: nowrap !important;
+	align-items: flex-start !important;
+	justify-content: flex-start !important;
+	width: 25% !important;
+	/* Increased to fit both elements side-by-side */
+	gap: 1rem !important;
+	order: -1;
+	margin-left: -6rem;
+}

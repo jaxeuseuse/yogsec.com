@@ -1,0 +1,175 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    ClargClick
+{% endblock %}
+
+{% block main %}
+<div class="game_container">
+    <div class="left-panel">
+        <div class="suggestion-box2 box2">
+            <form id="suggestionForm">
+                <label for="text2" style="display:block; text-align:left; font-weight:bold;">Chat</label>
+                <textarea id="text2" name="text" rows="2" style="width:100%;" placeholder="Hi my name is..." required></textarea>
+                <div class="actions">
+                    <button class="button2" type="submit" style="width:auto;">Submit</button>
+                </div>
+                <div id="status2" aria-live="polite"></div>
+            </form>
+
+            <h2 style="font-size: 0.9rem; text-align: left; margin-top: 10px;">Game Chat</h2>
+             <ul id="suggestionsList" style="list-style-type: none; font-size: 0.8rem; text-align: left; max-height: 150px; overflow-y: auto; padding: 0;">
+                {% if suggestions %}
+                    {% for s in suggestions %}
+                        <li style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 4px 0;">
+                            <span><strong>{{ s["username"] }}:</strong> {{ s["text"] | e }}</span>
+                            <small style="color: #888; margin-left: 10px; font-size: 0.7rem;">{{ s["timestamp"] }}</small>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+
+        <div class="stats-column">
+            <p id="viewClick">Clicks: <span id="clicks">0</span></p>
+            <p id="viewTime">Time: <span id="elapsed-time">0</span>s</p>
+            <p id="viewCPS">CPS: <span id="cps">0</span></p>
+        </div>
+    </div>
+
+    <div class="game_stuff">
+        <h1 id="title_game">Clarg Click</h1>
+        <p id="instructions">Click the Clarg as fast as possible!</p>
+        {% if personal_clarg %}
+            <img id="clarg" src="/static/clargs/{{ personal_clarg[0]['clargtype'] | default('clarg') }}.png" onclick="clickHandler()" alt="Clarg" style="cursor: pointer;">
+        {% else %}
+            <img id="clarg" src="/static/clargs/clarg.png" onclick="clickHandler()" alt="Clarg" style="cursor: pointer;">
+        {% endif %}
+    </div>
+
+    <div class="right-panel">
+        <button class="time-button" data-time="1">1 sec</button>
+        <button class="time-button" data-time="5">5 sec</button>
+        <button class="time-button" data-time="10">10 sec</button>
+        <button class="time-button" data-time="30">30 sec</button>
+        <button class="time-button" data-time="60">1 min</button>
+        <button class="time-button" custom-time>Custom</button>
+        <button id="resetButton" onclick="resetGame()">Reset</button>
+    </div>
+</div>
+
+<div id="game-popup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <p class="popup-message"></p>
+        <button id="close-button" onclick="closePopup('game-popup')">Close</button>
+    </div>
+</div>
+
+<div id="error-popup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <p class="popup-message"></p>
+        <button onclick="closePopup('error-popup')">Close</button>
+    </div>
+</div>
+
+<div id="leader-display">
+    <h6 style="font-size: .54em">Leaderboard</h6>
+    <table class="leaderboard">
+        <thead>
+            <tr>
+                <th>Profile Picture</th>
+                <th>Place</th>
+                <th>Name</th>
+                <th>CPS</th>
+                <th>Clarg</th>
+            </tr>
+        </thead>
+        <tbody id="leader-list">
+            {% for value in top5 %}
+                <tr>
+                    <td><img src="{{ url_for('profile_picture', user_id=value['user_id']) }}" alt="Profile Picture" width="50"></td>
+                    <td>#{{ loop.index }}</td>
+                    <td>{{ value['name'] }}</td>
+                    <td>{{ value['cps'] | humanize }}</td>
+                    <td>{{ value['clarg'] | replace('_', ' ') | title }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+        {% if logged_in and personal.name not in top5 | map(attribute='name') %}
+            <thead>
+                <tr>
+                    <th>Your Profile Picture</th>
+                    <th>Your Place</th>
+                    <th>Your Name</th>
+                    <th>Your CPS</th>
+                    <th>Your Clarg</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><img src="{{ personal.pfp }}" alt="Profile Picture" width="50"></td>
+                    <td>#{{ personal.rank }}</td>
+                    <td>{{ personal.name }}</td>
+                    <td>{{ personal.cps | humanize }}</td>
+                    <td>{{ personal.clarg | replace('_', ' ') | title }}</td>
+                </tr>
+            </tbody>
+        {% endif %}
+    </table>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("suggestionForm");
+  const textEl = document.getElementById("text2");     // match `id="text2"`
+  const statusEl = document.getElementById("status2"); // match `id="status2"`
+  let listEl = document.getElementById("suggestionsList");
+  const noneEl = document.getElementById("none");
+
+  if (!form || !textEl || !statusEl) return; // defensive
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const text = textEl.value.trim();
+    if (!text) return;
+
+    statusEl.textContent = "Submitting…";
+    try {
+      const res = await fetch("/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      const body = await res.json();
+      if (!res.ok || !body.ok) {
+        statusEl.textContent = body.error || "Submission failed";
+        return;
+      }
+      statusEl.textContent = "Thanks — submitted!";
+      textEl.value = "";
+
+      // update list in-page
+      if (noneEl) {
+        noneEl.remove();
+      }
+      if (!listEl) {
+        listEl = document.createElement("ul");
+        listEl.id = "suggestionsList";
+        // append after the form inside the box
+        form.insertAdjacentElement("afterend", listEl);
+      }
+      const li = document.createElement("li");
+      li.textContent = text;
+      listEl.prepend(li);
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent = "Network error";
+    } finally {
+      setTimeout(() => (statusEl.textContent = ""), 3000);
+    }
+  });
+});
+</script>
+
+<script src="/static/scriptIndex.js"></script>
+{% endblock %}

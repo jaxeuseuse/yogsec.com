@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GetSammy! by Dbag</title>
+
+  <link href="static/stylesGET/main.css" rel="stylesheet" type="text/css">
+  <link rel="shortcut icon" href="static/faviconGET.ico">
+  <link rel="apple-touch-icon" href="static/meta/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+  <div class="container">
+    <div class="heading">
+      <h1 class="title">GetSammy</h1>
+      <h2>(by Dbag)</h2>
+      <div class="scores-container">
+        <div class="score-container">0</div>
+        <div class="best-container">0</div>
+      </div>
+    </div>
+    <p class="game-intro">Combine other students to reach the <span onclick="document.body.style.background='url(static/img/yehuda.png)';">almighty <strong>SAMMY DORN!</strong></span></p>
+
+    <div class="game-container">
+      <div class="game-message">
+        <p></p>
+        <div class="lower">
+	        <a class="keep-playing-button">Keep going</a>
+          <a class="retry-button">Try again</a>
+        </div>
+      </div>
+
+      <div class="grid-container">
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+      </div>
+
+      <div class="tile-container">
+
+      </div>
+    </div>
+
+    <p class="game-explanation">
+      <strong class="important">How to play:</strong> Use your <strong>arrow keys</strong> to move the tiles. When two tiles with the same student touch, they <strong>merge into one!</strong>
+    </p>
+    <p>
+        <strong class="important">KEY:</strong>
+    </p>
+    <ul style="list-style-type: none; padding-left: 0;">
+      <li>Shaya Maryless – 2</li>
+      <li>Joseph Malahimov – 4</li>
+      <li>Justin Barkin – 8</li>
+      <li>Tzvi Fleksher – 16</li>
+      <li>Koby Cooper – 32</li>
+      <li>Ari Pollak – 64</li>
+      <li>Evan Serals – 128</li>
+      <li>Jakey Wolf – 256</li>
+      <li>Dovid Smith – 512</li>
+      <li>Daniel Ebner – 1024</li>
+      <li>Sammy Dorn – 2048</li>
+    </ul>
+    </p>
+  </div>
+
+  <script src="static/jsGET/animframe_polyfill.js"></script>
+  <script src="static/jsGET/keyboard_input_manager.js"></script>
+  <script src="static/jsGET/html_actuator.js"></script>
+  <script src="static/jsGET/grid.js"></script>
+  <script src="static/jsGET/tile.js"></script>
+  <script src="static/jsGET/local_score_manager.js"></script>
+  <script src="static/jsGET/game_manager.js"></script>
+  <script src="static/jsGET/application.js"></script>
+</body>
+</html>

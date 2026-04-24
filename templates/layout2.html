@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Yogurt Security Homepage</title>
+	<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+	<link rel="manifest" href="favicon/site.webmanifest">
+	<!-- style.css linking here -->
+	<link rel="stylesheet" href="static/styleBASE.css">
+	<!-- font family linking here -->
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+		rel="stylesheet">
+	<!-- font-awesome.min.css linking here -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+	<!-- header section strt -->
+	<section class="header headerwithback">
+		<img src="/static/images/banner.png" alt="" aria-hidden="true" class="header-bg">
+		<!-- nav strt -->
+		<nav>
+			<a href="/"><img src="static/images/logo1.png" alt=""></a>
+			<div class="nav-links" id="navLinks">
+				<i class="fa fa-times" onclick="hideMenu()"></i>
+				<ul>
+					<li>
+						<a href="/">HOME</a>
+					</li>
+					<li>
+						<a href="about">ABOUT</a>
+					</li>
+					<li>
+						<a href="clargclick">ClargClick</a>
+					</li>
+					<li>
+					    <a href="getsammy">GetSammy!</a>
+					</li>
+					<li>
+						<a href="contact">CONTACT</a>
+					</li>
+				</ul>
+			</div>
+			<i class="fa fa-bars" onclick="showMenu()"></i>
+		</nav>
+	</section>
+	{% block main %}
+    {% endblock %}
+	<section class="cta">
+		<h1>Have some beef with ya boy Dbag?<br></h1>
+		<a href="/contact" class="hero-btn">CONTACT ME</a>
+	</section>
+	<!-- Call to Action section end -->
+	<!-- footer strt -->
+	<section class="footer">
+		<a href="/about" style="text-decoration:none;">
+			<h4>About Me</h4>
+		</a>
+		<p>None of your beeswax mf (or check out my about page lol)</p>
+		<div class="icons">
+			<a href="https://www.linkedin.com/in/justin-barkin-655932331"><i class="fa fa-linkedin"></i></a>
+			<a href="https://github.com/jaxeuseuse"><i class="fa fa-github"></i></a>
+		</div>
+		<p>Base website design by <strong>Sayeeda Saima</strong></p>
+	</section>
+	<!-- footer end -->
+	<!-- Javascript for toggle menu -->
+	<script>
+		var navLinks = document.getElementById("navLinks");
+		function showMenu() {
+			navLinks.style.right = "0";
+		}
+		function hideMenu() {
+			navLinks.style.right = "-200px";
+		}
+	</script>
+	<script src="static/scriptBASE.js"></script>
+</body>
+</html>

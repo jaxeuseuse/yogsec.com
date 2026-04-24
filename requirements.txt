@@ -1,0 +1,7 @@
+Pillow
+cs50
+Flask
+Flask-Session
+Werkzeug
+Gunicorn
+requests
